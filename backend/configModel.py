@@ -1,7 +1,25 @@
 import requests
 from openai import OpenAI
+from dotenv import load_dotenv
+import io
+import cv2
+import numpy as np
+from PIL import Image
+from tkinter import filedialog, messagebox
 
-modeloTurbo = OpenAI(api_key="API_KEY")
+load_dotenv()
+
+modeloTurbo = OpenAI(api_key="api_key")
+
+def img_or_text_dinosaur():
+    """
+    Función para seleccionar si se desea buscar información de un dinosaurio por imagen o texto.
+    """
+    opcion = messagebox.askyesno("Dinosaurios", "¿Deseas buscar información de un dinosaurio por imagen?")
+    if opcion:
+        analizar_img()
+    else:
+        busqueda_openAI()
 
 def buscar_paleobiodb(nombre_dinosaurio):
     """
@@ -77,17 +95,84 @@ def busqueda_openAI(nombre_paleontologico):
             {"role": "system", "content": "Eres un paleontólogo experto que proporciona información precisa sobre dinosaurios, el cual puede brindar la información a detalle en cualquier idioma"},
             {"role": "user", "content": promptDinosaur}
         ],
-        max_tokens = 700,
-        temperature = 0.7
+        max_tokens = 500,
+        temperature = 0.6
     )
     
     if response and hasattr(response.choices[0].message, "content"):
         dinosaurio_response = response.choices[0].message.content
         return dinosaurio_response
     return "No se pudo obtener información detallada del dinosaurio."
+
+def analizar_img():
+    """
+    Función para analizar la imagen de un dinosaurio y obtener información del mismo.
+    """
+    img_dino = filedialog.askopenfilename(
+        title="Selecciona la imagen del dinosaurio",
+        filetypes=[(
+            "Archivos de imagen",
+            ("*.png", "*.jpg", "*.jpeg")
+        )]
+    )
     
-print(busqueda_openAI("Tyrannosaurus"))
+    if img_dino:
+        print(f"Archivo seleccionado {img_dino} analizando...")
+        
+        try:
+            img = Image.open(img_dino)
+            img.thumbnail((600, 600))
+            
+            dinosaurio_detectado = detectar_dinosaurio(img)
+            
+            if dinosaurio_detectado:
+                messagebox.showinfo("Dinosaurio detectado", f"Se detectó el dinosaurio {dinosaurio_detectado} en la imagen.")
+            else:
+                messagebox.showinfo("Dinosaurio no detectado", "No se detectó ningún dinosaurio en la imagen.")
+            
+        except Exception as e:
+            messagebox.showerror("Error", "No se pudo abrir la imagen seleccionada.")
+    else:
+        messagebox.showerror("Error", "No se seleccionó ninguna imagen.")
     
+    
+def detectar_dinosaurio(img):
+    """
+    Función para detectar el dinosaurio en la imagen.
+    """
+    api_key = ""
+    model_url = ""
+    
+    dinosaurios_posibles = ["Tyrannosaurus", "Triceratops", "Velociraptor", "Brachiosaurus", "Stegosaurus", "Spinosaurus", "Ankylosaurus", "Diplodocus", "Pteranodon", "Allosaurus", "Achelousaurus", "Aardonyx", "Apatosaurus", "Avaceratops", "Dilophosaurus", "Dryosaurus", "Ceratosaurus", "Kotasaurus", "Allosaurus"]
+    
+    img_byte_arr = io.BytesIO()
+    img.save(img_byte_arr, format='PNG')
+    img_bytes = img_byte_arr.getvalue()
+    
+    headers = {"Authorization": f"Bearer {api_key}"}
+    files = {"file": img_bytes}
+    data = {"inputs": dinosaurios_posibles}
+    
+    response = requests.post(model_url, headers=headers, files=files, data=data)
+    
+    if response.status_code == 200:
+        result = response.json()
+        print("Resultado del modelo:", result)
+        
+        nombre_dino = result.get("outputs", [])[0].get("dinosaurio")
+        if nombre_dino:
+            max_score = np.argmax(nombre_dino)
+            nombre_dinosaurio = dinosaurios_posibles[max_score]
+            busqueda_openAI(nombre_dinosaurio)
+            
+        else:
+            print("Dinosaurio no detectado.")
+            return None
+
+    
+print(img_or_text_dinosaur())
+
+
 # from google.cloud import vision
 
 # # Crea un cliente de Vision API
