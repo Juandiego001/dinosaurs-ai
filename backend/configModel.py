@@ -1,15 +1,57 @@
 import requests
-import json
-import os
 from openai import OpenAI
 
 modeloTurbo = OpenAI(api_key="API_KEY")
 
+def buscar_paleobiodb(nombre_dinosaurio):
+    """
+    Función para encontrar información del dinosaurio en Paleobiology Database. 
+    """
+    url = f"https://paleobiodb.org/data1.2/taxa/single.json?name={nombre_dinosaurio}&show=full"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    return f"No se encontró información de {nombre_dinosaurio} en Paleobiology Database."
+      
+def buscar_wikipedia(nombre_dinosaurio):
+    """
+    Función para encontrar información del dinosaruio en Wikipedia 
+    """
+    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{nombre_dinosaurio}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("extract", "No se encontró información en Wikipedia.")
+    return "No se encontró información en Wikipedia."
+  
+# ! No es una API, no devuelve JSON. Pensar en web scrapping  
+# def buscar_naturalmuseum(nombre_dinosaurio):
+#     """
+#     Función para encontrar información del dinosaruio en el Museo Natural de Historia Londres 
+#     """
+#     url = f"https://www.nhm.ac.uk/discover/dino-directory/{nombre_dinosaurio}.html"
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         data = response.json()
+#         return data.get("description", "No se encontró información en el Museo de Historia Natural.")
+#     return "No se encontró información en el Museo de Historia Natural."
+
 def busqueda_openAI(nombre_paleontologico):
+    """
+    Configuración del modelo AI para brindar la respuesta al usuario con la información detallada del dinosaurio.
+    """
+    info_dinof1 = buscar_paleobiodb(nombre_paleontologico)
+    info_dinof2 = buscar_wikipedia(nombre_paleontologico)
     
     promptDinosaur = f"""
     Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}.
-    Con base en tú busqueda, genera información detallada sobre el dinosaurio {nombre_paleontologico} siguiendo de apoyo esta estructura:
+    Con base la siguiente información obtenida de 3 fuentes:
+    Descripción de Paleobiology Database: {info_dinof1},
+    Descripción de wikipedia: {info_dinof2}, 
+    
+    Con base en la información detallada del dinosaurio, 
+    organizalá en la siguiente estructura:
     {{
         "nombre_cientifico": "",
         "nombre_comun": "",
@@ -42,8 +84,9 @@ def busqueda_openAI(nombre_paleontologico):
     if response and hasattr(response.choices[0].message, "content"):
         dinosaurio_response = response.choices[0].message.content
         return dinosaurio_response
-    else:
-        return "No se pudo obtener información detallada del dinosaurio."
+    return "No se pudo obtener información detallada del dinosaurio."
+    
+print(busqueda_openAI("Tyrannosaurus"))
     
 # from google.cloud import vision
 
