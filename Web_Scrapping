@@ -1,0 +1,22 @@
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+driver = webdriver.Chrome()
+url = "https://www.nhm.ac.uk/discover/dino-directory.html"
+driver.get(url)
+
+# Obtener todo el texto visible del <body>
+texto_completo = driver.find_element(By.TAG_NAME, "body").text
+
+# Guardar el texto en un archivo
+with open("contenido_pagina.txt", "w", encoding="utf-8") as file:
+    file.write(texto_completo)
+
+# Mostrar en pantalla el contenido extraído
+print(" CONTENIDO EXTRAÍDO \n")
+print(texto_completo[:2000])  # Mostrar solo los primeros 2000 caracteres para evitar demasiado texto
+print("\n (Mostrando solo una parte del contenido)")
+
+driver.quit()
+
