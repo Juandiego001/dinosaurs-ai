@@ -1,5 +1,7 @@
 from searchModel import buscar_paleobiodb, buscar_wikipedia
 import ollama
+import re
+from dinosaurs_list import dinosaurs_list
 
 options = {
     "temperature": 0.5,
@@ -21,52 +23,77 @@ def generate_response(model_name, prompt):
         )
     return llm_output['message']['content']
     
-def generar_respuesta(model_name, nombre_paleontologico):
+def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
     """Genera información sobre dinosaurios con el modelo de IA"""
 
     # Buscar información en distintas fuentes
-    info_dino2 = buscar_wikipedia(nombre_paleontologico)
+    info_dino1 = buscar_wikipedia(nombre_dino_api)
 
     # Crear el prompt para el modelo
     promptDinosaur = f"""
-    Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}.
-    Con base en la información obtenida, de tus conocimientos y de lo obtenido en wikipedia:
-    - Resultados de wikipedia: {info_dino2}
+    Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}. 
+    Usa tus conocimientos y la información obtenida de Wikipedia como información adicional:
+    - Extracto de Wikipedia: {info_dino1}
 
-    Organiza la información en español o inglés, depende de como te pregunte el usuario para todas las respuestas en este formato JSON.
-    Para la parte de longitud y peso estimado brinda el Sistema Internacional de Medida estadounidense y colombiano, en el caso de longitud brindar en metros y libras el resultado y para el caso de peso_estimado, brindar en kilogramos y libros. Sus conversiones son así:
+    Asegúrate de usar la siguiente información para crear una respuesta en formato JSON:
+    - Organiza los datos ya sea en español o en inglés, según lo que pida el usuario.
+    - Para la longitud y el peso estimado, proporciona tanto el sistema internacional de medidas (metros y kilogramos) como las unidades estadounidenses (pies y libras).
     - 1 pie = 0.3048 metros
     - 1 kilogramo = 2.20 libras
-    Recuerda, simplemente la información necesaria para completar cada campo del JSON:
+
+    Devuelve estos datos estructurados en formato JSON:
+
     {{
         "nombre_cientifico": "",
         "nombre_comun": "",
-        "periodo": "",
-        "habitat": "",
-        "dieta": "",
+        "periodo": "Período geológico",
+        "habitat": "Descripción del hábitat",
+        "dieta": "Dieta (carnívoro, herbívoro, etc.)",
         "longitud": "",
         "peso_estimado": "",
-        "descripcion": "",
+        "descripcion": "Descripción detallada incluyendo información de Wikipedia y otras fuentes científicas",
         "clasificacion": {{
             "orden": "",
             "familia": "",
             "genero": "",
             "especie": ""
         }},
-        "curiosidades": []
+        "curiosidades": ["Curiosidad 1", "Curiosidad 2"],
+        "recursos": [
+            "Procura que los recursos no sean páginas 404 ERROR, brinda enlaces verídicos. Además de brindar como recurso Wikipedia siguiendo la estructura de los siguientes URLs"
+            "URL de Wikipedia: https://en.wikipedia.org/wiki/{nombre_dino_api}",
+            "URL de summary Wikipedia: https://en.wikipedia.org/api/rest_v1/page/summary/{nombre_dino_api}",
+            "Usa recursos como paleobiodb.org que brinda mayor soporte y estructura a tu respuesta",
+            "Recursos científicos adicionales o enlaces (si están disponibles)"
+        ],
+        "uso_de_wikipedia": "Indica explícitamente si se utilizó Wikipedia o no como fuente."
     }}
-    """
 
-    # Hacer la consulta al modelo
+    Si no encontraste información detallada en Wikipedia, menciona otros recursos confiables como bases de datos científicas o artículos. Asegúrate de incluir todas las fuentes relevantes.
+    """
     respuesta = generate_response(model_name, promptDinosaur)
     return respuesta
 
 if __name__ == "__main__":
+    # * Modelo de Ollama usado
     model_name = "gemma3:4b"  
     
-    # Generar una respuesta
-    nombre_dino = "Me gustaría saber información del Euoplocephalus tutus"
-    response = generar_respuesta(model_name, nombre_dino)
+    # * Usando Regular Expressions para extraer nombre Dino para APIS
+    nombre_dino = input("Cuentame que quieres aprender hoy?: ")
+    nombre_dino_api = nombre_dino.title()
     
-    print("Respuesta del modelo:", response)
+    pattern = r"\b(" + "|".join([re.escape(dino) for dino in dinosaurs_list]) + r")\b"
+    
+    match = re.search(pattern, nombre_dino_api)
+
+    if match:
+        extract_dino = match.group(0)  # Captura del nombre del dino
+    else:
+        print("No se encontró un dinosaurio en la oración.")
+    
+    if extract_dino:
+        response = generar_respuesta(model_name, nombre_dino, nombre_dino_api)
+        print("Respuesta del modelo:", response)
+    else:
+        print("No se pudo generar la respuesta.")
     

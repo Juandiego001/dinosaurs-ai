@@ -26,3 +26,15 @@ def buscar_wikipedia(nombre_dinosaurio):
     return "No se encontró información en Wikipedia."
 
 ## * Agregar la BD a partir de la información del Museo
+def buscar_DB(nombre_dinosaurio):
+    """
+    Función para encontrar información del dinosaurio en la base de datos
+    """
+    url = f""
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("información", "No se encontró información en la base de datos.")
+    
+    return f"Información de {nombre_dinosaurio} no disponible en la base de datos."
