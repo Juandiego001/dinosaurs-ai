@@ -7,10 +7,10 @@
                     @update:itemsPerPage="v => perPage = v">
 
                     <template v-slot:item.option="{ item }">
-                        <v-btn class="my-2 bg-grey-darken-4" icon="mdi-pencil" @click="getUser(item.id)"></v-btn>
+                        <v-btn class="my-2 bg-secondary" icon="mdi-pencil" @click="getUser(item.id)"></v-btn>
                         <span class="mx-2"></span>
                         <v-btn class="my-2 bg-red" icon="mdi-trash-can"
-                            @click="form.id = item.id; deleteDialog=true"></v-btn>
+                            @click="form.id = item.id; deleteDialog = true"></v-btn>
                     </template>
 
                 </v-data-table>
@@ -21,11 +21,11 @@
     <!-- Create Dialog -->
     <v-dialog v-model="createDialog" max-width="500">
         <v-card>
-            <v-card-title class="bg-grey-darken-4">
+            <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
                     Create user
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-grey-darken-4" icon="mdi-close" @click="createDialog = false"></v-btn>
+                    <v-btn class="bg-secondary" icon="mdi-close" @click="createDialog = false"></v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text>
@@ -49,7 +49,7 @@
                         <v-col class="text-end">
                             <v-btn variant="outlined" @click="updateDialog = false">Cancel</v-btn>
                             <span class="mx-1"></span>
-                            <v-btn type="submit" class="bg-grey-darken-4">Create</v-btn>
+                            <v-btn type="submit" class="bg-secondary">Create</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -61,11 +61,11 @@
     <!-- Update Dialog -->
     <v-dialog v-model="updateDialog" max-width="500">
         <v-card>
-            <v-card-title class="bg-grey-darken-4">
+            <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
                     Update user
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-grey-darken-4" icon="mdi-close" @click="updateDialog = false"></v-btn>
+                    <v-btn class="bg-secondary" icon="mdi-close" @click="updateDialog = false"></v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text>
@@ -89,7 +89,7 @@
                         <v-col class="text-end">
                             <v-btn variant="outlined" @click="updateDialog = false">Cancel</v-btn>
                             <span class="mx-1"></span>
-                            <v-btn type="submit" class="bg-grey-darken-4">Update</v-btn>
+                            <v-btn type="submit" class="bg-secondary">Update</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -101,11 +101,11 @@
     <!-- Delete Dialog -->
     <v-dialog v-model="deleteDialog" max-width="500">
         <v-card>
-            <v-card-title class="bg-grey-darken-4">
+            <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
                     Delete user
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-grey-darken-4" icon="mdi-close" @click="deleteDialog = false"></v-btn>
+                    <v-btn class="bg-secondary" icon="mdi-close" @click="deleteDialog = false"></v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text class="text-center py-6">
@@ -121,11 +121,11 @@
     <!-- Search Dialog -->
     <v-dialog v-model="searchDialog" max-width="500">
         <v-card>
-            <v-card-title class="bg-grey-darken-4">
+            <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
                     Search users
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-grey-darken-4" icon="mdi-close" @click="searchDialog = false"></v-btn>
+                    <v-btn class="bg-secondary" icon="mdi-close" @click="searchDialog = false"></v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text>
@@ -138,7 +138,7 @@
                         </v-col>
 
                         <v-col class="text-end mt-4" cols="12">
-                            <v-btn class="bg-grey-darken-4" type="submit">Search</v-btn>
+                            <v-btn class="bg-secondary" type="submit">Search</v-btn>
                         </v-col>
 
                     </v-row>
@@ -148,122 +148,127 @@
     </v-dialog>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed, watch, onBeforeMount, nextTick } from 'vue'
+import { useFetch } from '#app'
 import { toRefs } from 'vue'
-import { search } from '~/mixins/search'
-import { create } from '~/mixins/create'
+import { searchMixin } from '~/mixins/searchMixin'
+import { createMixin } from '~/mixins/createMixin'
 
 definePageMeta({
     layout: 'app'
 })
 
-export default {
-    setup() {
-        return {
-            ...toRefs(search),
-            ...toRefs(create)
-        }
-    },
-    data: () => ({
-        items: [],
-        search: '',
-        page: 1,
-        perPage: 15,
-        form: {
-            id: '',
-            fullName: '',
-            email: '',
-            password: '',
-            document: '',
-            status: '',
-            created_at: '',
-            updated_at: ''
-        },
-        updateDialog: false,
-        deleteDialog: false
-    }),
-    computed: {
-        headers() {
-            return [
-                { title: 'Id', key: 'id' },
-                { title: 'Full name', key: 'fullName' },
-                { title: 'Email', key: 'email' },
-                { title: 'Options', key: 'option', align: 'center' }
-            ]
-        }
-    },
-    watch: {
-        async perPage(value) { await this.getUsers(); }
-    },
-    async beforeMount() { await this.getUsers(); },
-    methods: {
-        async getUsers() {
-            try {
-                const { items } = await $fetch('/api/users/', {
-                    query: {
-                        search: this.search,
-                        page: this.page,
-                        perPage: this.perPage
-                    },
-                    method: 'GET'
-                })
-                this.items = items
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        async getUser(id) {
-            try {
-                const user = await $fetch(`/api/users/${id}`, {
-                    method: 'GET'
-                })
-                this.form = user
-                this.updateDialog = true
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        async createUser () {
-            try {
-                const response = await $fetch('/api/users/signup', {
-                    method: 'POST',
-                    body: this.form
-                })
-                await this.getUsers()
-                this.createDialog = false
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        async updateUser() {
-            try {
-                const response = await $fetch(`/api/users/${this.form.id}`, {
-                    method: 'PUT',
-                    body: this.form
-                })
-                await this.getUsers()
-                this.updateDialog = false
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        async deleteUser() {
-            const response = await $fetch(`/api/users/${this.form.id}`, {
-                method: 'DELETE'
-            })
-            await this.getUsers()
-            this.deleteDialog = false
-        },
-        async doSearch() {
-            try {
-                this.page = 1
-                this.perPage = 15
-                await this.getUsers()
-                this.searchDialog = false
-            } catch (err) {
-                console.log(err)
-            }
-        }
+useHead({
+    title: 'DinoScanAI | Users'
+})
+
+const { ...searchRefs } = toRefs(searchMixin)
+const { ...createRefs } = toRefs(createMixin)
+const items = ref([]);
+const search = ref('');
+const page = ref(1);
+const perPage = ref(15);
+const updateDialog = ref(false);
+const deleteDialog = ref(false);
+const form = ref({
+    id: '',
+    fullName: '',
+    email: '',
+    password: '',
+    document: '',
+    status: '',
+    created_at: '',
+    updated_at: ''
+})
+
+
+const headers = computed(() => [
+    { title: 'Id', key: 'id' },
+    { title: 'Full name', key: 'fullName' },
+    { title: 'Email', key: 'email' },
+    { title: 'Options', key: 'option', align: 'center' }
+])
+
+watch(() => perPage, async (val) => {
+    await getUsers();
+})
+
+onBeforeMount(async () => {
+    await getUsers();
+})
+
+const getUsers = async () => {
+    try {
+        const { items } = await $fetch('/api/users/', {
+            query: {
+                search: this.search,
+                page: this.page,
+                perPage: this.perPage
+            },
+            method: 'GET'
+        })
+        this.items = items
+    } catch (err) {
+        console.log(err)
     }
 }
+
+const getUser = async (id) => {
+    try {
+        const user = await $fetch(`/api/users/${id}`, {
+            method: 'GET'
+        })
+        this.form = user
+        this.updateDialog = true
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const createUser = async () => {
+    try {
+        const response = await $fetch('/api/users/signup', {
+            method: 'POST',
+            body: this.form
+        })
+        await this.getUsers()
+        this.createDialog = false
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const updateUser = async () => {
+    try {
+        const response = await $fetch(`/api/users/${this.form.id}`, {
+            method: 'PUT',
+            body: this.form
+        })
+        await this.getUsers()
+        this.updateDialog = false
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const deleteUser = async () => {
+    const response = await $fetch(`/api/users/${this.form.id}`, {
+        method: 'DELETE'
+    })
+    await this.getUsers()
+    this.deleteDialog = false
+}
+
+const doSearch = async () => {
+    try {
+        this.page = 1
+        this.perPage = 15
+        await this.getUsers()
+        this.searchDialog = false
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 </script>

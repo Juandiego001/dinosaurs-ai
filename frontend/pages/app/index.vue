@@ -1,11 +1,21 @@
 <template>
-
+    Testing
 </template>
 
-<script>
+<script setup>
+const { $ability } = useNuxtApp();
+
 definePageMeta({
-    layout: 'app'
+    layout: 'app',
+    middleware: 'private'
 })
-export default {
-}
+
+useHead({
+    title: 'DinoScanAI | App'
+})
+
+onMounted(() => {
+    // if (!$ability.can('read', 'users')) navigateTo('/login');
+})
+
 </script>

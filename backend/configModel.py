@@ -87,7 +87,7 @@ def busqueda_openAI(nombre_paleontologico):
         }},
         "curiosidades": []
     }}
-    """;
+    """
     
     response = modeloTurbo.chat.completions.create(
         model = "gpt-4o-mini",
