@@ -1,193 +1,99 @@
-import requests
-from openai import OpenAI
-from dotenv import load_dotenv
-import io
-import cv2
-import numpy as np
-from PIL import Image
-from tkinter import filedialog, messagebox
+from searchModel import buscar_paleobiodb, buscar_wikipedia
+import ollama
+import re
+from dinosaurs_list import dinosaurs_list
 
-load_dotenv()
+options = {
+    "temperature": 0.5,
+    "stop": None,
+    "frequency_penalty": 1,
+    "max_tokens": 80,
+}
 
-modeloTurbo = OpenAI(api_key="api_key")
-
-def img_or_text_dinosaur():
-    """
-    Función para seleccionar si se desea buscar información de un dinosaurio por imagen o texto.
-    """
-    opcion = messagebox.askyesno("Dinosaurios", "¿Deseas buscar información de un dinosaurio por imagen?")
-    if opcion:
-        analizar_img()
-    else:
-        busqueda_openAI()
-
-def buscar_paleobiodb(nombre_dinosaurio):
-    """
-    Función para encontrar información del dinosaurio en Paleobiology Database. 
-    """
-    url = f"https://paleobiodb.org/data1.2/taxa/single.json?name={nombre_dinosaurio}&show=full"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        return data
-    return f"No se encontró información de {nombre_dinosaurio} en Paleobiology Database."
-      
-def buscar_wikipedia(nombre_dinosaurio):
-    """
-    Función para encontrar información del dinosaruio en Wikipedia 
-    """
-    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{nombre_dinosaurio}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        return data.get("extract", "No se encontró información en Wikipedia.")
-    return "No se encontró información en Wikipedia."
-  
-# ! No es una API, no devuelve JSON. Pensar en web scrapping  
-# def buscar_naturalmuseum(nombre_dinosaurio):
-#     """
-#     Función para encontrar información del dinosaruio en el Museo Natural de Historia Londres 
-#     """
-#     url = f"https://www.nhm.ac.uk/discover/dino-directory/{nombre_dinosaurio}.html"
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         data = response.json()
-#         return data.get("description", "No se encontró información en el Museo de Historia Natural.")
-#     return "No se encontró información en el Museo de Historia Natural."
-
-def busqueda_openAI(nombre_paleontologico):
-    """
-    Configuración del modelo AI para brindar la respuesta al usuario con la información detallada del dinosaurio.
-    """
-    info_dinof1 = buscar_paleobiodb(nombre_paleontologico)
-    info_dinof2 = buscar_wikipedia(nombre_paleontologico)
+def generate_response(model_name, prompt):
+    """ Genera una respuesta utilizando un modelo de Ollama. """
+    llm_output = ollama.chat(
+        model=model_name,
+        messages=[
+            {"role": "user", "content": prompt},
+            {"role": "system", "content": "Eres un paleontólogo experto que proporciona información precisa sobre dinosaurios, el cual puede brindar la información a detalle en cualquier idioma"}
+        ],
+        options= options,
+        format = "json",        
+        )
+    return llm_output['message']['content']
     
+def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
+    """Genera información sobre dinosaurios con el modelo de IA"""
+
+    # Buscar información en distintas fuentes
+    info_dino1 = buscar_wikipedia(nombre_dino_api)
+
+    # Crear el prompt para el modelo
     promptDinosaur = f"""
-    Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}.
-    Con base la siguiente información obtenida de 3 fuentes:
-    Descripción de Paleobiology Database: {info_dinof1},
-    Descripción de wikipedia: {info_dinof2}, 
-    
-    Con base en la información detallada del dinosaurio, 
-    organizalá en la siguiente estructura:
+    Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}. 
+    Usa tus conocimientos y la información obtenida de Wikipedia como información adicional:
+    - Extracto de Wikipedia: {info_dino1}
+
+    Asegúrate de usar la siguiente información para crear una respuesta en formato JSON:
+    - Organiza los datos ya sea en español o en inglés, según lo que pida el usuario.
+    - Para la longitud y el peso estimado, proporciona tanto el sistema internacional de medidas (metros y kilogramos) como las unidades estadounidenses (pies y libras).
+    - 1 pie = 0.3048 metros
+    - 1 kilogramo = 2.20 libras
+
+    Devuelve estos datos estructurados en formato JSON:
+
     {{
         "nombre_cientifico": "",
         "nombre_comun": "",
-        "periodo": "",
-        "habitat": "",
-        "dieta": "",
-        "longitud en metros y pies": "",
-        "peso_estimado en kilogramos y libras": "",
-        "descripcion": "",
+        "periodo": "Período geológico",
+        "habitat": "Descripción del hábitat",
+        "dieta": "Dieta (carnívoro, herbívoro, etc.)",
+        "longitud": "",
+        "peso_estimado": "",
+        "descripcion": "Descripción detallada incluyendo información de Wikipedia y otras fuentes científicas",
         "clasificacion": {{
             "orden": "",
             "familia": "",
             "genero": "",
-            "especie": "",
+            "especie": ""
         }},
-        "curiosidades": []
-    }}
-    """
-    
-    response = modeloTurbo.chat.completions.create(
-        model = "gpt-4o-mini",
-        messages = [
-            {"role": "system", "content": "Eres un paleontólogo experto que proporciona información precisa sobre dinosaurios, el cual puede brindar la información a detalle en cualquier idioma"},
-            {"role": "user", "content": promptDinosaur}
+        "curiosidades": ["Curiosidad 1", "Curiosidad 2"],
+        "recursos": [
+            "Procura que los recursos no sean páginas 404 ERROR, brinda enlaces verídicos. Además de brindar como recurso Wikipedia siguiendo la estructura de los siguientes URLs"
+            "URL de Wikipedia: https://en.wikipedia.org/wiki/{nombre_dino_api}",
+            "URL de summary Wikipedia: https://en.wikipedia.org/api/rest_v1/page/summary/{nombre_dino_api}",
+            "Usa recursos como paleobiodb.org que brinda mayor soporte y estructura a tu respuesta",
+            "Recursos científicos adicionales o enlaces (si están disponibles)"
         ],
-        max_tokens = 500,
-        temperature = 0.6
-    )
-    
-    if response and hasattr(response.choices[0].message, "content"):
-        dinosaurio_response = response.choices[0].message.content
-        return dinosaurio_response
-    return "No se pudo obtener información detallada del dinosaurio."
+        "uso_de_wikipedia": "Indica explícitamente si se utilizó Wikipedia o no como fuente."
+    }}
 
-def analizar_img():
+    Si no encontraste información detallada en Wikipedia, menciona otros recursos confiables como bases de datos científicas o artículos. Asegúrate de incluir todas las fuentes relevantes.
     """
-    Función para analizar la imagen de un dinosaurio y obtener información del mismo.
-    """
-    img_dino = filedialog.askopenfilename(
-        title="Selecciona la imagen del dinosaurio",
-        filetypes=[(
-            "Archivos de imagen",
-            ("*.png", "*.jpg", "*.jpeg")
-        )]
-    )
+    respuesta = generate_response(model_name, promptDinosaur)
+    return respuesta
+
+if __name__ == "__main__":
+    # * Modelo de Ollama usado
+    model_name = "gemma3:4b"  
     
-    if img_dino:
-        print(f"Archivo seleccionado {img_dino} analizando...")
-        
-        try:
-            img = Image.open(img_dino)
-            img.thumbnail((600, 600))
-            
-            dinosaurio_detectado = detectar_dinosaurio(img)
-            
-            if dinosaurio_detectado:
-                messagebox.showinfo("Dinosaurio detectado", f"Se detectó el dinosaurio {dinosaurio_detectado} en la imagen.")
-            else:
-                messagebox.showinfo("Dinosaurio no detectado", "No se detectó ningún dinosaurio en la imagen.")
-            
-        except Exception as e:
-            messagebox.showerror("Error", "No se pudo abrir la imagen seleccionada.")
+    # * Usando Regular Expressions para extraer nombre Dino para APIS
+    nombre_dino = input("Cuentame que quieres aprender hoy?: ")
+    nombre_dino_api = nombre_dino.title()
+    
+    pattern = r"\b(" + "|".join([re.escape(dino) for dino in dinosaurs_list]) + r")\b"
+    
+    match = re.search(pattern, nombre_dino_api)
+
+    if match:
+        extract_dino = match.group(0)  # Captura del nombre del dino
     else:
-        messagebox.showerror("Error", "No se seleccionó ninguna imagen.")
+        print("No se encontró un dinosaurio en la oración.")
     
+    if extract_dino:
+        response = generar_respuesta(model_name, nombre_dino, nombre_dino_api)
+        print("Respuesta del modelo:", response)
+    else:
+        print("No se pudo generar la respuesta.")
     
-def detectar_dinosaurio(img):
-    """
-    Función para detectar el dinosaurio en la imagen.
-    """
-    api_key = ""
-    model_url = ""
-    
-    dinosaurios_posibles = ["Tyrannosaurus", "Triceratops", "Velociraptor", "Brachiosaurus", "Stegosaurus", "Spinosaurus", "Ankylosaurus", "Diplodocus", "Pteranodon", "Allosaurus", "Achelousaurus", "Aardonyx", "Apatosaurus", "Avaceratops", "Dilophosaurus", "Dryosaurus", "Ceratosaurus", "Kotasaurus", "Allosaurus"]
-    
-    img_byte_arr = io.BytesIO()
-    img.save(img_byte_arr, format='PNG')
-    img_bytes = img_byte_arr.getvalue()
-    
-    headers = {"Authorization": f"Bearer {api_key}"}
-    files = {"file": img_bytes}
-    data = {"inputs": dinosaurios_posibles}
-    
-    response = requests.post(model_url, headers=headers, files=files, data=data)
-    
-    if response.status_code == 200:
-        result = response.json()
-        print("Resultado del modelo:", result)
-        
-        nombre_dino = result.get("outputs", [])[0].get("dinosaurio")
-        if nombre_dino:
-            max_score = np.argmax(nombre_dino)
-            nombre_dinosaurio = dinosaurios_posibles[max_score]
-            busqueda_openAI(nombre_dinosaurio)
-            
-        else:
-            print("Dinosaurio no detectado.")
-            return None
-
-    
-print(img_or_text_dinosaur())
-
-
-# from google.cloud import vision
-
-# # Crea un cliente de Vision API
-# client = vision.ImageAnnotatorClient()
-
-# # Carga una imagen
-# with open("imagen.jpg", "rb") as image_file:
-#     content = image_file.read()
-
-# image = vision.Image(content=content)
-
-# # Analiza la imagen y obtiene etiquetas
-# response = client.label_detection(image=image)
-# labels = response.label_annotations
-
-# # Muestra las etiquetas detectadas
-# for label in labels:
-#     print(label.description, label.score)

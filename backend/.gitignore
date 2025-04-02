@@ -2,3 +2,6 @@
 venv
 files
 __pycache__
+/__pycache__
+coments.txt
+prueba.py
