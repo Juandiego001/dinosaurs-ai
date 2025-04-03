@@ -17,14 +17,16 @@
 --     curiosidades TEXT,  -- Curiosidades en formato JSON o texto
 -- );
 
-INSERT INTO dinosaurs
-(nombre_cientifico, nombre_comun, periodo, habitat, dieta, longitud_metros, longitud_pies, peso_kg, peso_lb, descripcion, clasificacion_orden, clasificacion_familia, clasificacion_genero, clasificacion_especie, curiosidades)
-VALUES
-(
-    'Camarasaurus supremus', 'Camarasaurus', 'Jurásico tardío', 'Norteamérica', 'Herbívoro', 18.0, 59.1, 20000.0, 44092.5, 'Un saurópodo robusto con un cuello fuerte y cabeza cuadrada.', 'Saurischia', 'Camarasauridae', 'Camarasaurus', 'supremus', '["Era uno de los saurópodos más comunes de Norteamérica.", "Sus dientes eran más resistentes que los de otros saurópodos."]'
-)
+-- INSERT INTO dinosaurs
+-- (nombre_cientifico, nombre_comun, periodo, habitat, dieta, longitud_metros, longitud_pies, peso_kg, peso_lb, descripcion, clasificacion_orden, clasificacion_familia, clasificacion_genero, clasificacion_especie, curiosidades)
+-- VALUES
+-- (
+--     'Camarasaurus supremus', 'Camarasaurus', 'Jurásico tardío', 'Norteamérica', 'Herbívoro', 18.0, 59.1, 20000.0, 44092.5, 'Un saurópodo robusto con un cuello fuerte y cabeza cuadrada.', 'Saurischia', 'Camarasauridae', 'Camarasaurus', 'supremus', '["Era uno de los saurópodos más comunes de Norteamérica.", "Sus dientes eran más resistentes que los de otros saurópodos."]'
+-- )
 
 
-SELECT * FROM dinosaurs;
+-- SELECT * FROM dinosaurs FOR JSON AUTO;
+SELECT * FROM dinosaurs WHERE nombre_comun = 'coelurus';
+-- SELECT * FROM dinosaurs WHERE nombre_cientifico = 'Aardonyx' OR nombre_comun = 'Aardonyx' FOR JSON AUTO;
 
-
+-- SELECT curiosidades FROM dinosaurs WHERE nombre_cientifico = 'Borogovia gracilicrus';

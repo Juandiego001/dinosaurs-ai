@@ -1,4 +1,6 @@
 import requests
+from api_config.azure_conection import search_dinosaur_info
+
 
 def buscar_paleobiodb(nombre_dinosaurio):
     """
@@ -30,11 +32,9 @@ def buscar_DB(nombre_dinosaurio):
     """
     Función para encontrar información del dinosaurio en la base de datos
     """
-    url = f""
-    response = requests.get(url)
+    dinosaur_info = search_dinosaur_info(nombre_dinosaurio)
     
-    if response.status_code == 200:
-        data = response.json()
-        return data.get("información", "No se encontró información en la base de datos.")
-    
-    return f"Información de {nombre_dinosaurio} no disponible en la base de datos."
+    if dinosaur_info:
+        return dinosaur_info
+    else:
+        return f"Información de {nombre_dinosaurio} no disponible en la Base de Datos."

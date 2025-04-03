@@ -1,4 +1,4 @@
-from searchModel import buscar_paleobiodb, buscar_wikipedia
+from searchModel import buscar_paleobiodb, buscar_wikipedia, buscar_DB
 import ollama
 import re
 from dinosaurs_list import dinosaurs_list
@@ -28,12 +28,14 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
 
     # Buscar información en distintas fuentes
     info_dino1 = buscar_wikipedia(nombre_dino_api)
+    info_dino2 = buscar_DB(nombre_dino_api)
 
     # Crear el prompt para el modelo
     promptDinosaur = f"""
     Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}. 
     Usa tus conocimientos y la información obtenida de Wikipedia como información adicional:
     - Extracto de Wikipedia: {info_dino1}
+    - Extracto de Base de Datos propia: {info_dino2}
 
     Asegúrate de usar la siguiente información para crear una respuesta en formato JSON:
     - Organiza los datos ya sea en español o en inglés, según lo que pida el usuario.
@@ -48,7 +50,7 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
         "nombre_comun": "",
         "periodo": "Período geológico",
         "habitat": "Descripción del hábitat",
-        "dieta": "Dieta (carnívoro, herbívoro, etc.)",
+        "dieta": "(carnívoro, herbívoro, etc.)",
         "longitud": "",
         "peso_estimado": "",
         "descripcion": "Descripción detallada incluyendo información de Wikipedia y otras fuentes científicas",
@@ -66,7 +68,8 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
             "Usa recursos como paleobiodb.org que brinda mayor soporte y estructura a tu respuesta",
             "Recursos científicos adicionales o enlaces (si están disponibles)"
         ],
-        "uso_de_wikipedia": "Indica explícitamente si se utilizó Wikipedia o no como fuente."
+        "uso_de_wikipedia": "Indica explícitamente si se utilizó Wikipedia {info_dino1} o no como fuente."
+        "uso_de_BD_info_dino2": "Indica explícitamente si se utilizó la Base de datos {info_dino2} o no como fuente."
     }}
 
     Si no encontraste información detallada en Wikipedia, menciona otros recursos confiables como bases de datos científicas o artículos. Asegúrate de incluir todas las fuentes relevantes.
@@ -79,19 +82,19 @@ if __name__ == "__main__":
     model_name = "gemma3:4b"  
     
     # * Usando Regular Expressions para extraer nombre Dino para APIS
-    nombre_dino = input("Cuentame que quieres aprender hoy?: ")
-    nombre_dino_api = nombre_dino.title()
+    nombre_dino = input("Cuentame que quieres aprender hoy?: ").lower()
     
-    pattern = r"\b(" + "|".join([re.escape(dino) for dino in dinosaurs_list]) + r")\b"
+    pattern = r"\b(" + "|".join(dino.lower() for dino in dinosaurs_list) + r")\b"
     
-    match = re.search(pattern, nombre_dino_api)
+    match = re.search(pattern, nombre_dino)
 
     if match:
-        extract_dino = match.group(0)  # Captura del nombre del dino
+        nombre_dino_api = match.group(0).title()  # Lo devuelve con la primera letra en mayúscula
+        print(f"Dinosaurio detectado: {nombre_dino_api}")
     else:
         print("No se encontró un dinosaurio en la oración.")
     
-    if extract_dino:
+    if nombre_dino_api:
         response = generar_respuesta(model_name, nombre_dino, nombre_dino_api)
         print("Respuesta del modelo:", response)
     else:
