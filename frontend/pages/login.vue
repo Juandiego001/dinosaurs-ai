@@ -1,7 +1,7 @@
 <template>
     <v-container fluid class="fill-height justify-center pa-0 position-relative">
-        <v-img width="100%" height="100%" cover class="position-absolute" src="/blade.webp"></v-img>
-        <v-card max-width="400" class="bg-transparent px-6 pb-6" elevation="3">
+        <v-img width="100%" height="100%" cover class="position-absolute" src="/dino1.png"></v-img>
+        <v-card max-width="400" class="bg-transparent px-6 pb-6" elevation="3" style="backdrop-filter: blur(14px);">
             <v-card-title class="text-center text-h4 text-white py-4">Log In</v-card-title>
             <v-form @submit.prevent="logIn">
                 <v-row>
@@ -36,35 +36,32 @@
     </v-container>
 </template>
 
-<script>
+<script setup>
+import { useProfile } from '~/composables/useProfile'
+
 definePageMeta({
     layout: 'account'
 })
 
-export default {
-    data: () => ({
-        email: '',
-        password: ''
-    }),
-    methods: {
-        async logIn() {
-            try {
-                console.log({ email: this.email })
-                console.log({ password: this.password })
-                const response = await $fetch('/api/users/login', {
-                    method: 'POST',
-                    body: {
-                        email: this.email,
-                        password: this.password
-                    }
-                })
+const { $ability } = useNuxtApp();
+const profile = useProfile()
+const email = ref('')
+const password = ref('')
 
-                console.log('RESPONSE: ', response)
-                if (response.status == 200) navigateTo('/app');
-            } catch (err) {
-                console.log(err);
+const logIn = async () => {
+    try {
+        await $fetch('/api/users/login', {
+            method: 'POST',
+            body: {
+                email: email.value,
+                password: password.value
             }
-        }
+        })
+        const { abilities } = await $fetch('/api/users/profile', { method: 'GET' });
+        $ability.update(abilities);
+        navigateTo('/app');
+    } catch (err) {
+        console.log(err);
     }
 }
 </script>

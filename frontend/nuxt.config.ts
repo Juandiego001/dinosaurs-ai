@@ -2,6 +2,13 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/t_rex_icon.png' }
+      ]
+    }
+  },
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   runtimeConfig: {
