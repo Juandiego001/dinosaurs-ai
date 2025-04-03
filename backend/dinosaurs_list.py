@@ -12,6 +12,7 @@ dinosaurs_list = [
     "Atrociraptor", "Aucasaurus", "Austrosaurus", "Avaceratops", "Avimimus", 
     "Bactrosaurus", "Bagaceratops", "Bambiraptor", "Barapasaurus", 
     "Barosaurus", "Baryonyx", "Becklespinax", "Beipiaosaurus", 
-    "Bellusaurus", "Borogovia", "Brachiosaurus", "Brachylophosaurus", 
-    "Brachytrachelopan", "Buitreraptor"
+    "Bellusaurus", "Borogovia", "Bonitasaura", "Brachiosaurus", "Brachylophosaurus", 
+    "Brachytrachelopan", "Buitreraptor", "Camarasaurus", "Carnotaurus", "Cetiosaurus",
+    "Chasmosaurus", "Coelurus", "Concavenator", "Cryolophosaurus"
 ]
