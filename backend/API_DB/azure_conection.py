@@ -1,14 +1,10 @@
 import pyodbc
+import keys
 
-server = "dinosaursdb.database.windows.net"
-database = "dinosaursDB"
-username = "adminuser"
-password = "password321."
-driver = "{ODBC Driver 18 for SQL Server}"
 
 try:
     conn = pyodbc.connect(
-        f"DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        f"DRIVER={keys.driver};SERVER={keys.server};DATABASE={keys.database};UID={keys.username};PWD={keys.password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     )
     print("Conexión exitosa")
     cursor = conn.cursor()
