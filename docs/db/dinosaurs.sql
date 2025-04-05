@@ -25,8 +25,8 @@
 -- )
 
 
--- SELECT * FROM dinosaurs FOR JSON AUTO;
-SELECT * FROM dinosaurs WHERE nombre_comun = 'coelurus';
+SELECT * FROM dinosaurs;
+-- SELECT * FROM dinosaurs WHERE nombre_comun = 'coelurus';
 -- SELECT * FROM dinosaurs WHERE nombre_cientifico = 'Aardonyx' OR nombre_comun = 'Aardonyx' FOR JSON AUTO;
 
 -- SELECT curiosidades FROM dinosaurs WHERE nombre_cientifico = 'Borogovia gracilicrus';
