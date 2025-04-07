@@ -6,12 +6,12 @@
             <v-form @submit.prevent="logIn">
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field class="text-white" v-model="email" label="Email" hide-details="auto" type="email">
+                        <v-text-field class="text-white" v-model="email" label="Email" hide-details="auto" type="email" variant="outlined">
                         </v-text-field>
                     </v-col>
 
                     <v-col cols="12 pb-0">
-                        <v-text-field class="text-white" v-model="password" label="Password" hide-details="auto"
+                        <v-text-field class="text-white" v-model="password" label="Password" hide-details="auto" variant="outlined"
                             type="password"></v-text-field>
                     </v-col>
 

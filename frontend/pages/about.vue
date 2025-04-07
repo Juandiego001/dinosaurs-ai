@@ -1,6 +1,6 @@
 <template>
-<v-container fluid class="fill-height justify-center bg-grey-darken-4">
-    <v-card max-width="800" class="my-6 pa-6 bg-grey-darken-4" elevation="10">
+<v-container fluid class="fill-height justify-center">
+    <v-card max-width="800" class="my-6 pa-6 bg-primary" elevation="10">
         <v-card-title class="text-h3 text-center">
             About us
         </v-card-title>

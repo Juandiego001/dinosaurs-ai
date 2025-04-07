@@ -1,9 +1,8 @@
 <template>
-<v-container fluid class="fill-height justify-center bg-grey-darken-4">
-    <v-card max-width="700" class="pa-3 bg-grey-darken-4" elevation="10">
-        
+<v-container fluid class="fill-height justify-center">
+    <v-card max-width="700" class="pa-3 bg-primary" elevation="10">
         <v-card-title class="text-center">
-            <p class="text-h6 ">Descubre el Mundo Prehistórico</p>
+            <p class="text-h4">Descubre el Mundo Prehistórico</p>
         </v-card-title>
 
         <v-card-text>
@@ -20,7 +19,6 @@
             </p>
 
             <!-- Falta la parte del upload image -->
-
             <v-form>
                 <v-row class="justify-center align-center">
                     <v-col cols="12">

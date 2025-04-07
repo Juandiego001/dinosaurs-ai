@@ -7,16 +7,19 @@
 
             <v-col cols="12" class="d-flex flex-wrap align-center justify-center ">
                 <v-btn class="text-none mx-2"  to="/">
-                    Inicio
-                </v-btn>
-                <v-btn class="text-none mx-2" to="/crew" variant="text">
-                    Archivar
+                    Home
                 </v-btn>
                 <v-btn class="text-none mx-2" to="/about" variant="text">
-                    Recursos
+                    About
                 </v-btn>
-                <v-btn class="text-none mx-2" to="/crew" variant="text">
-                    Crew
+                <v-btn class="text-none mx-2" to="/contact" variant="text">
+                    Contact
+                </v-btn>
+                <v-btn class="text-none mx-2" to="/resources" variant="text">
+                    Resources
+                </v-btn>
+                <v-btn class="text-none mx-2" to="/forum" variant="text">
+                    Forum
                 </v-btn>
                 <v-btn class="text-none mx-2" variant="text" to="/login">
                     Log In
