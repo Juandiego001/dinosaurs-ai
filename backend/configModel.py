@@ -1,4 +1,4 @@
-from searchModel import buscar_paleobiodb, buscar_wikipedia, buscar_DB
+from searchModel import buscar_paleobiodb, buscar_wikipedia, buscar_database
 import ollama
 import re
 from dinosaurs_list import dinosaurs_list
@@ -28,11 +28,11 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
 
     # Buscar información en distintas fuentes
     info_dino1 = buscar_wikipedia(nombre_dino_api)
-    info_dino2 = buscar_DB(nombre_dino_api)
+    info_dino2 = buscar_database(nombre_dino_api)
     info_dino3 = buscar_paleobiodb(nombre_dino_api)
 
     # Crear el prompt para el modelo
-    promptDinosaur = f"""
+    prompt_dinosaur = f"""
     Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}. 
     Usa tus conocimientos y la información obtenida de Wikipedia como información adicional:
     - Extracto de Wikipedia: {info_dino1}
@@ -46,7 +46,6 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
     - 1 kilogramo = 2.20 libras
 
     Devuelve estos datos estructurados en formato JSON:
-
     {{
         "nombre_cientifico": "",
         "nombre_comun": "",
@@ -77,7 +76,7 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
 
     Si no encontraste información detallada en Wikipedia, menciona otros recursos confiables como bases de datos científicas o artículos. Asegúrate de incluir todas las fuentes relevantes.
     """
-    respuesta = generate_response(model_name, promptDinosaur)
+    respuesta = generate_response(model_name, prompt_dinosaur)
     return respuesta
 
 if __name__ == "__main__":
@@ -86,9 +85,7 @@ if __name__ == "__main__":
     
     # * Usando Regular Expressions para extraer nombre Dino para APIS
     nombre_dino = input("Cuentame que quieres aprender hoy?: ").lower()
-    
     pattern = r"\b(" + "|".join(dino.lower() for dino in dinosaurs_list) + r")\b"
-    
     match = re.search(pattern, nombre_dino)
 
     if match:

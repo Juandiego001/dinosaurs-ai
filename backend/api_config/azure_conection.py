@@ -1,12 +1,15 @@
 import pyodbc
 from decimal import Decimal
-import json
 import api_config.secret_keys as keys
-
 
 def get_db_access():
     conn = pyodbc.connect(
-        f"DRIVER={keys.driver};SERVER={keys.server};DATABASE={keys.database};UID={keys.username};PWD={keys.password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        f"""DRIVER={keys.driver};
+        SERVER={keys.server};
+        DATABASE={keys.database};
+        UID={keys.username};
+        PWD={keys.password};
+        Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"""
     )
     return conn
     
@@ -15,12 +18,14 @@ def search_dinosaur_info(nombre_dinosaurio):
     print("Conexión Exitosa")
     cursor = conn.cursor()
     
-    query = "SELECT * FROM dinosaurs WHERE TRIM(nombre_comun) = TRIM(?) OR TRIM(nombre_cientifico) = TRIM(?)"
+    query = """
+    SELECT * FROM dinosaurs WHERE 
+    TRIM(nombre_comun) = TRIM(?) OR TRIM(nombre_cientifico) = TRIM(?)
+    """
     cursor.execute(query, (nombre_dinosaurio.strip(), nombre_dinosaurio.strip()))
     
     row = cursor.fetchone()
     print(f"Buscando en la BD: '{nombre_dinosaurio.strip()}'")
-
     
     if row:
         columns = [column[0] for column in cursor.description]  # Obtener los nombres de las columnas
@@ -37,3 +42,4 @@ def search_dinosaur_info(nombre_dinosaurio):
         conn.close()
         print("Dinosaurio No encontrado")
         return None
+    
