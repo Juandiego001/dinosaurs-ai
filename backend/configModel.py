@@ -1,4 +1,4 @@
-from searchModel import buscar_paleobiodb, buscar_wikipedia, buscar_DB
+from searchModel import buscar_paleobiodb, buscar_wikipedia, buscar_database
 import ollama
 import re
 from dinosaurs_list import dinosaurs_list
@@ -28,14 +28,16 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
 
     # Buscar información en distintas fuentes
     info_dino1 = buscar_wikipedia(nombre_dino_api)
-    info_dino2 = buscar_DB(nombre_dino_api)
+    info_dino2 = buscar_database(nombre_dino_api)
+    info_dino3 = buscar_paleobiodb(nombre_dino_api)
 
     # Crear el prompt para el modelo
-    promptDinosaur = f"""
+    prompt_dinosaur = f"""
     Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}. 
     Usa tus conocimientos y la información obtenida de Wikipedia como información adicional:
     - Extracto de Wikipedia: {info_dino1}
     - Extracto de Base de Datos propia: {info_dino2}
+    - Extracto de Paleobiodb: {info_dino3}
 
     Asegúrate de usar la siguiente información para crear una respuesta en formato JSON:
     - Organiza los datos ya sea en español o en inglés, según lo que pida el usuario.
@@ -44,7 +46,6 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
     - 1 kilogramo = 2.20 libras
 
     Devuelve estos datos estructurados en formato JSON:
-
     {{
         "nombre_cientifico": "",
         "nombre_comun": "",
@@ -65,16 +66,17 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
             "Procura que los recursos no sean páginas 404 ERROR, brinda enlaces verídicos. Además de brindar como recurso Wikipedia siguiendo la estructura de los siguientes URLs"
             "URL de Wikipedia: https://en.wikipedia.org/wiki/{nombre_dino_api}",
             "URL de summary Wikipedia: https://en.wikipedia.org/api/rest_v1/page/summary/{nombre_dino_api}",
-            "Usa recursos como paleobiodb.org que brinda mayor soporte y estructura a tu respuesta",
+            "Usa recursos como paleobiodb.org que brinda mayor soporte y estructura a tu respuesta, con enlaces validos como: https://paleobiodb.org/data1.2/taxa/single.json?name={nombre_dino_api}&show=full",
             "Recursos científicos adicionales o enlaces (si están disponibles)"
         ],
         "uso_de_wikipedia": "Indica explícitamente si se utilizó Wikipedia {info_dino1} o no como fuente."
         "uso_de_BD_info_dino2": "Indica explícitamente si se utilizó la Base de datos {info_dino2} o no como fuente."
+        "uso_paleobiodb": "Indica explícitamente si se utilizó Paleobiodb {info_dino3} o no como fuente."
     }}
 
     Si no encontraste información detallada en Wikipedia, menciona otros recursos confiables como bases de datos científicas o artículos. Asegúrate de incluir todas las fuentes relevantes.
     """
-    respuesta = generate_response(model_name, promptDinosaur)
+    respuesta = generate_response(model_name, prompt_dinosaur)
     return respuesta
 
 if __name__ == "__main__":
@@ -83,9 +85,7 @@ if __name__ == "__main__":
     
     # * Usando Regular Expressions para extraer nombre Dino para APIS
     nombre_dino = input("Cuentame que quieres aprender hoy?: ").lower()
-    
     pattern = r"\b(" + "|".join(dino.lower() for dino in dinosaurs_list) + r")\b"
-    
     match = re.search(pattern, nombre_dino)
 
     if match:
