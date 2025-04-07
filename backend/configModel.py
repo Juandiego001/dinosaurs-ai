@@ -2,6 +2,8 @@ from searchModel import buscar_paleobiodb, buscar_wikipedia, buscar_database
 import ollama
 import re
 from dinosaurs_list import dinosaurs_list
+import time
+import sys
 
 options = {
     "temperature": 0.5,
@@ -23,17 +25,21 @@ def generate_response(model_name, prompt):
         )
     return llm_output['message']['content']
     
-def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api):
+def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api, ruta_img = None):
     """Genera información sobre dinosaurios con el modelo de IA"""
 
     # Buscar información en distintas fuentes
     info_dino1 = buscar_wikipedia(nombre_dino_api)
     info_dino2 = buscar_database(nombre_dino_api)
     info_dino3 = buscar_paleobiodb(nombre_dino_api)
+    
+    imagen_info = f"La imagen proporcionada para este dinosaurio es: {ruta_img}" if ruta_img else ""
 
     # Crear el prompt para el modelo
     prompt_dinosaur = f"""
-    Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}. 
+    Investiga a detalle información sobre el dinosaurio {nombre_paleontologico}.
+    {imagen_info}
+    
     Usa tus conocimientos y la información obtenida de Wikipedia como información adicional:
     - Extracto de Wikipedia: {info_dino1}
     - Extracto de Base de Datos propia: {info_dino2}
