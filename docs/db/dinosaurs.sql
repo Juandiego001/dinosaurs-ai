@@ -17,15 +17,30 @@
 --     curiosidades TEXT,  -- Curiosidades en formato JSON o texto
 -- );
 
--- INSERT INTO dinosaurs
--- (nombre_cientifico, nombre_comun, periodo, habitat, dieta, longitud_metros, longitud_pies, peso_kg, peso_lb, descripcion, clasificacion_orden, clasificacion_familia, clasificacion_genero, clasificacion_especie, curiosidades)
--- VALUES
--- (
---     'Camarasaurus supremus', 'Camarasaurus', 'Jurásico tardío', 'Norteamérica', 'Herbívoro', 18.0, 59.1, 20000.0, 44092.5, 'Un saurópodo robusto con un cuello fuerte y cabeza cuadrada.', 'Saurischia', 'Camarasauridae', 'Camarasaurus', 'supremus', '["Era uno de los saurópodos más comunes de Norteamérica.", "Sus dientes eran más resistentes que los de otros saurópodos."]'
--- )
+INSERT INTO dinosaurs
+    (nombre_cientifico, nombre_comun, periodo, habitat, dieta, longitud_metros, longitud_pies, peso_kg, peso_lb, descripcion, clasificacion_orden, clasificacion_familia, clasificacion_genero, clasificacion_especie, curiosidades)
+VALUES
+(
+    'Stegosaurus stenops',
+    'Stegosaurus',
+    'Jurásico tardío',
+    'Norteamérica',
+    'Herbívoro',
+    9.0,
+    29.5,
+    3000.0,
+    6614.0,
+    'Stegosaurus es fácilmente reconocible por las grandes placas óseas a lo largo de su espalda y las púas en su cola. Se cree que estas estructuras servían para la defensa, la regulación térmica o la exhibición.',
+    'Ornithischia',
+    'Stegosauridae',
+    'Stegosaurus',
+    'stenops',
+    '["Su cerebro era del tamaño de una nuez en comparación con su cuerpo.", "Las placas de su espalda estaban cubiertas de piel y podían haber tenido colores vivos."]'
+);
 
 
-SELECT * FROM dinosaurs;
+SELECT *
+FROM dinosaurs;
 -- SELECT * FROM dinosaurs WHERE nombre_comun = 'coelurus';
 -- SELECT * FROM dinosaurs WHERE nombre_cientifico = 'Aardonyx' OR nombre_comun = 'Aardonyx' FOR JSON AUTO;
 
