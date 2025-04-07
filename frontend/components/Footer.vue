@@ -5,9 +5,10 @@
         </v-col>
 
         <v-col class="text-end" cols="6 pa-4">
-            <NuxtLink class="text-white text-decoration-none me-4 text-caption" to="/crew">Crew</NuxtLink>
-            <NuxtLink class="text-white text-decoration-none me-4 text-caption" to="/contact">Contact</NuxtLink>
             <NuxtLink class="text-white text-decoration-none me-4 text-caption" to="/about">About</NuxtLink>
+            <NuxtLink class="text-white text-decoration-none me-4 text-caption" to="/contact">Contact</NuxtLink>
+            <NuxtLink class="text-white text-decoration-none me-4 text-caption" to="/resources">Resources</NuxtLink>
+            <NuxtLink class="text-white text-decoration-none me-4 text-caption" to="/forum">Forum</NuxtLink>
             <NuxtLink class="text-white text-decoration-none me-4 text-caption" to="/login">Log In</NuxtLink>
             <NuxtLink class="text-white text-decoration-none text-caption" to="/signup">Sign Up</NuxtLink>
         </v-col>

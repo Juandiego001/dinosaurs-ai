@@ -1,5 +1,6 @@
 <template>
 <v-container fluid class="fill-height justify-center">
+    Página de recuperación de contraseña
     <template :key="`${i}category`" v-for="category, i  in categories">
         <p class="text-h2">{{ category.name }}</p>
         <div v-for="movies, i in category.movies">

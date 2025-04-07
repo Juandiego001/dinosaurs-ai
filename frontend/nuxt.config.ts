@@ -4,6 +4,7 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   app: {
     head: {
+      title: 'DinoScan AI',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/t_rex_icon.png' }
       ]
@@ -20,8 +21,9 @@ export default defineNuxtConfig({
     transpile: ['vuetify']
   },
   routeRules: {
-    '/api/**': { proxy: 'http://127.0.0.1:5000/api/**' }
-
+    '/api/**': { proxy: 'http://127.0.0.1:5000/api/**' },
+    '/strapi/**': { proxy: 'http://127.0.0.1:1337/api/**' },
+    '/discourse/**': { proxy: 'http://192.168.0.104:4200/**' }
   },
   modules: [
     (_options, nuxt) => {
