@@ -1,68 +1,51 @@
 <template>
-<v-container fluid class="fill-height justify-center bg-grey-darken-4">
-    <v-card max-width="800" class="my-6 pa-6 bg-grey-darken-4" elevation="10">
-        <v-card-title class="text-h3 text-center">
+<v-container fluid class="fill-height justify-center pa-0 position-relative">
+    <v-img width="100%" height="100%" cover class="position-absolute" src="/dinosaurs3.jpg"></v-img>
+    <v-card max-width="800" class="my-6 pa-5 bg-grey-darken-3 opacity-90 " elevation="10">
+        <v-card-title class="text-h4 text-center">
             About us
+            <p class="text-h4">——🦖——</p>
         </v-card-title>
         <v-card-text>
             <p class="mb-3">
-                At Cinemas, we believe in the magic of storytelling and the timeless experience of watching movies on the
-                big screen. Since our founding, we’ve been dedicated to bringing the best of cinema to our audiences, just 
-                as it was meant to be enjoyed—lights dimmed, popcorn in hand, and surrounded by the shared excitement of 
-                fellow movie lovers.
+                At the intersection between modern technology and the ancestral past of our planet, our paleontological project was born in 2025. We are a team of three passionate engineers who have united our technical knowledge and our fascination for fossils to create a digital platform dedicated to paleontological research and dissemination in Colombia and around the world as a development of a final project of a postgraduate course.
             </p>
 
-            <h3 class="mb-2">Our Story</h3>
+            <h3 class="mb-2 text-subtitle-1 text-overline text-decoration-underline">About the Project</h3>
             <p class="mb-3">
-                Founded in 1988, Cinemas was born out of a passion for film and a desire to preserve the traditional
-                movie-going experience. In a world where streaming has become the norm, we’ve stayed true to our roots,
-                offering a space where people can escape, connect, and immerse themselves in the art of cinema.
+                The heart of our initiative is a comprehensive paleontological database (currently under development) that will catalog chronological and taxonomic information, physical descriptions, and fossil curiosities. This digital repository will serve not only as a tool for researchers, but also as an accessible educational resource for students, hobbyists, and the general public.
             </p>
-
-            <h3 class="mb-2">What We Do</h3>
             <p class="mb-3">
-                We curate a diverse selection of films, from the latest blockbusters to timeless classics, ensuring there’s
-                something for everyone. Our state-of-the-art theaters are designed to deliver unparalleled sound and
-                picture quality, making every visit unforgettable. Whether you’re here for a family movie night, a date,
-                or a solo escape, we’re committed to making your experience special.
+                Our scope is global, seeking to establish connections between local findings and the global paleontological context, in order to integrate a community of fossil lovers and enthusiasts, where they can share ideas, images and other curious fossil data. Also with resources for fans to learn more about the animals that inhabited the planet we call Earth.
             </p>
-            
-            <h3 class="mb-2">Our Mission</h3>
-            <p class="mb-3">
-                Our mission is simple: to celebrate the art of cinema and bring people together through the power of
-                film. We strive to create a welcoming environment where every guest feels at home and every movie feels
-                larger than life.
-            </p>
-            
-            <h3 class="mb-2">Why Choose Us?</h3>
             <p>
                 <v-icon icon="mdi-circle-small"></v-icon>
-                Big Screen Magic: Experience movies the way they were meant to be seen—on the big screen.
+                Comprehensive Database: A detailed and evolving repository cataloging fossils, species descriptions, and geological context.
             </p>
-
+            <br>
             <p>
                 <v-icon icon="mdi-circle-small"></v-icon>
-                Curated Selection: From indie gems to Hollywood hits, we handpick films that inspire and entertain.
+                Community Engagement: A collaborative platform where enthusiasts can share images, data, and fossil curiosities.
             </p>
-
-            <p>
-                <v-icon icon="mdi-circle-small"></v-icon>
-                Community Focus: We’re more than just a theater; we’re a gathering place for film enthusiasts.
-            </p>
-
+            <br>
             <p class="mb-3">
                 <v-icon icon="mdi-circle-small"></v-icon>
-                Timeless Tradition: We honor the classic movie-going experience while embracing modern comforts.
+                Educational Access: Built for researchers, students, and the public to explore and learn about Earth’s prehistoric life.
             </p>
 
-
-
-            <h3 class="mb-2">Join Us</h3>
+            <h3 class="mb-2 text-subtitle-1 text-overline text-decoration-underline">Our Mision</h3>
             <p class="mb-3">
-                At Cinemas, every visit is more than just a movie—it’s an experience. Come see the difference for yourself. Grab your tickets, pick your favorite snacks, and let the magic of cinema transport you.
+                We seek to provide access to paleontological knowledge through the development of innovative digital tools and Artificial Intelligence. We firmly believe that understanding our geological and biological past is fundamental to contextualize our current existence.
             </p>
             
-            <p>We can’t wait to see you at the movies! 🎬</p>
+            <h3 class="mb-2 text-subtitle-1 text-overline text-decoration-underline">Our Vision</h3>
+            <p class="mb-3">
+                Transforming the way people access, understand and value paleontological heritage through accessible, interactive and artificial intelligence-based technology solutions.
+            </p>
+            
+            <p class="text-center font-weight-bold mt-10">Join our community of fossil enthusiasts and let curiosity guide your exploration. 
+                <br><br>
+                We hope you enjoy the app! 🌍🦖</p>
         </v-card-text>
     </v-card>
 </v-container>
