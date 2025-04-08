@@ -6,8 +6,8 @@ DinoScan AI es una aplicación móvil que permite a los usuarios identificar esp
 Este repositorio contiene el código y recursos utilizados para el desarrollo del proyecto, incluyendo el backend, frontend y modelos de IA.
 
 ### 🛠 Tecnologías Utilizadas
-- Frontend: Vue.js + Nuxt.js + vuetify
-- Backend: Python
+- Frontend: Vue.js 3 + Nuxt.js 3 + Vuetify.js 3
+- Backend: Python.
 - IA/ML:
   - Generación de texto con modelos LLM (gemma3)
   - Detección de objetos y labels (Google Vision API)
@@ -31,12 +31,41 @@ git clone https://github.com/Juandiego001/dinosaurs-ai.git
 cd dinosaurs-ai
 
 # Instalar dependencias del frontend (Nuxt)
-cd ../frontend
+cd frontend
 yarn install
+
+# Configurar variables de entorno de backend, strapi y discourse
+NUXT_APP_URL='<ip-backend>'
+NUXT_STRAPI_URL='<ip-strapi>'
+NUXT_DISCOURSE_URL='<ip-discourse>'
 
 # Ejecutar la app en desarrollo
 yarn run dev
+
+# En otra terminal
+
+# Crear entorno virtual
+cd ../backend
+python -m venv venv
+
+# Activar el entorno virtual
+source venv/Scripts/activate
+
+# Instalar dependencias del backend
+pip install -r requirements.txt
+
+# Configurar variables de entorno de bases de datos y demás
+HOST='0.0.0.0'
+SQLALCHEMY_DATABASE_URI='<ip-postgres>'
+SQL_SERVER_DRIVER='<ip-sql-server>'
+
+# Agregar archivo de credenciales de Google Vision a nivel raiz !IMPORTANTE
+# /backend/<archivo-credenciales-google-vision.json>
+
+# Ejecutar backend
+python run.py
 ```
+
 
 ### 🤝 Contribuciones
 ¡Las contribuciones son bienvenidas! Puedes colaborar de las siguientes formas:

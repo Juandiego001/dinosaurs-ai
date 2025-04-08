@@ -306,7 +306,7 @@ const sendSearch = async () => {
 
 const saveSearch = async () => {
   try {
-    const { message } = await $fetch('/api/searches/save/photo', {
+    const { message } = await $fetch('/api/searches/save', {
       body: {
         dinosaur: dinosaur.value,
         prediction: prediction.value,
@@ -315,7 +315,7 @@ const saveSearch = async () => {
       method: 'POST'
     });
   } catch (err) {
-    console.err(err);
+    console.error(err);
   }
 }
 
