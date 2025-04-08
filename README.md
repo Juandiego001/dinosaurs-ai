@@ -6,7 +6,13 @@ DinoScan AI es una aplicación móvil que permite a los usuarios identificar esp
 Este repositorio contiene el código y recursos utilizados para el desarrollo del proyecto, incluyendo el backend, frontend y modelos de IA.
 
 ### 🛠 Tecnologías Utilizadas
-
+- Frontend: Vue.js + Nuxt.js
+- Backend: Python + FastAPI
+- IA/ML:
+  - Generación de texto con modelos LLM (Ollama)
+- Gestión de Contenidos: Strapi (CMS Headless)
+- Comunidad y Feedback: Discourse (foro integrado)
+- Base de datos: PostgreSQL, 
 
 ### 🎯 Características Principales
 - 📷 Clasificación Automática de dinosaurios a partir de fotografías.
@@ -15,3 +21,21 @@ Este repositorio contiene el código y recursos utilizados para el desarrollo de
 - 🌐 Foro de Comunidad para compartir descubrimientos y participar en debates.
 - 📊 Dashboard de Administración para gestionar especies, datos y retroalimentación.
 - 🧪 Entrenamiento Personalizado con datasets propios o subidos por la comunidad.
+
+### 🚀 Instalación y Ejecución Local
+~~~
+# Clonar el repositorio
+git clone https://github.com/Juandiego001/dinosaurs-ai.git
+cd dinoscan-ai
+
+# Instalar dependencias del backend (FastAPI)
+cd backend
+pip install -r requirements.txt
+
+# Instalar dependencias del frontend (Nuxt)
+cd ../frontend
+yarn add
+
+# Ejecutar la app en desarrollo
+yarn run dev
+~~~
