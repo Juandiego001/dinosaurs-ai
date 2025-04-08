@@ -35,7 +35,6 @@ def search_dinosaur_info(nombre_dinosaurio):
         for key, value in dinosaur_info.items():
             if isinstance(value, Decimal):
                 dinosaur_info[key] = float(value)
-
         conn.close()
         return dinosaur_info
     else:

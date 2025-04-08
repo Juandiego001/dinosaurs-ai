@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
 
-    <v-img :src="`http://localhost:1337${infography.file.url}`" width="100%"></v-img>
+    <v-img :src="`${strapiUrl}${infography.file.url}`" width="100%"></v-img>
     <a class="text-subtitle-1 mt-2 d-block text-grey text-caption" :href="infography.url" target="_blank">{{ infography.url }}</a>
     <p class="text-subtitle-1 mt-2">{{ infography.description }}</p>
   </v-container>
@@ -27,9 +27,11 @@
 <script setup>
 import { onBeforeMount } from 'vue';
 
+const config = useRuntimeConfig();
 const { $dateFormat } = useNuxtApp();
 const route = useRoute()
 
+const strapiUrl = config.public.strapiUrl;
 const infography = ref({
   file: {
     url: ''

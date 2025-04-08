@@ -8,7 +8,7 @@
     <v-row>
       <v-card v-for="article in articles" :key="article.documentId"
       width="300" height="300" :to="`/resources/articles/${article.documentId}`" class="me-6">
-        <v-img max-height="100" cover :src="`http://localhost:1337${article.cover.url}`" />
+        <v-img max-height="100" cover :src="`${strapiUrl}${article.cover.url}`" />
         <v-card-title>{{ article.title }}</v-card-title>
         <v-card-text>{{ article.description }}</v-card-text>
       </v-card>
@@ -27,7 +27,7 @@
     <v-row>
       <v-card v-for="video in videos" :key="video.documentId" width="300" height="300"
         :to="`/resources/videos/${video.documentId}`" class="me-6">
-        <v-img max-height="100" cover :src="`http://localhost:1337${video.poster.url}`" />
+        <v-img max-height="100" cover :src="`${strapiUrl}${video.poster.url}`" />
         <v-card-title>{{ video.title }}</v-card-title>
         <v-card-text>{{ video.description }}</v-card-text>
       </v-card>
@@ -46,7 +46,7 @@
     <v-row>
       <v-card v-for="infography in infographics" :key="infography.documentId" width="300" height="300"
       :to="`/resources/infographics/${infography.documentId}`" class="me-6">
-        <v-img max-height="100" cover :src="`http://localhost:1337${infography.file.url}`" />
+        <v-img max-height="100" cover :src="`${strapiUrl}${infography.file.url}`" />
         <v-card-title>{{ infography.title }}</v-card-title>
         <v-card-text>{{ infography.description }}</v-card-text>
       </v-card>
@@ -62,6 +62,9 @@
 <script setup>
 import { onBeforeMount } from 'vue'
 
+const config = useRuntimeConfig();
+
+const strapiUrl = config.public.strapiUrl;
 const articles = ref([]);
 const videos = ref([]);
 const infographics = ref([]);

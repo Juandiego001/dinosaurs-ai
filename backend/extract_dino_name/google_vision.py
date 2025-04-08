@@ -7,7 +7,7 @@ from configModel import generar_respuesta
 from dinosaurs_list import dinosaurs_list
 
 # Configurar credenciales
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "backend/extract_dino_name/regal-bonito-455502-e9-08bbdf4eebc3.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "regal-bonito-455502-e9-08bbdf4eebc3.json"
 
 # Pesos para cada tipo de detección
 TYPE_WEIGHTS = {
@@ -27,12 +27,15 @@ def is_dinosaur(obj_name):
     return any(term.lower() in lower_name for term in DINOSAUR_TERMS)
 
 
-def detect_dinosaurs(image_path):
+def detect_dinosaurs(image_path, image_bin=False):
     """Detecta dinosaurios y calcula puntuación ponderada"""
     client = vision.ImageAnnotatorClient()
     
-    with open(image_path, "rb") as image_file:
-        content = image_file.read()
+    if image_path:
+        with open(image_path, "rb") as image_file:
+            content = image_file.read()
+    elif image_bin:
+        content = image_bin.read()
     
     image = vision.Image(content=content)
     

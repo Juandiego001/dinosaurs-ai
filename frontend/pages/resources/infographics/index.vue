@@ -15,7 +15,7 @@
     <v-row class="my-6">
         <v-card v-for="infography in infographics" :key="infography.documentId"
           width="300" height="300" :to="`/resources/infographics/${infography.documentId}`" class="me-6">
-          <v-img max-height="100" cover :src="`http://localhost:1337${infography.file.url}`" />
+          <v-img max-height="100" cover :src="`${strapiUrl}${infography.file.url}`" />
           <v-card-title>{{ infography.title }}</v-card-title>
           <v-card-text>{{ infography.description }}</v-card-text>
         </v-card>
@@ -30,6 +30,9 @@
 <script setup>
 import { onBeforeMount } from 'vue'
 
+const config = useRuntimeConfig();
+
+const strapiUrl = config.public.strapiUrl;
 const infographics = ref([]);
 
 onBeforeMount(async () => {

@@ -1,6 +1,7 @@
 import { useCookie } from '#app'
 
 export interface UserProfile {
+  id: Number
   full_name: string
   email: string
 }

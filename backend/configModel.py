@@ -82,7 +82,9 @@ def generar_respuesta(model_name, nombre_paleontologico, nombre_dino_api, ruta_i
 
     Si no encontraste información detallada en Wikipedia, menciona otros recursos confiables como bases de datos científicas o artículos. Asegúrate de incluir todas las fuentes relevantes.
     """
+    print('PROMPT: ', prompt_dinosaur)
     respuesta = generate_response(model_name, prompt_dinosaur)
+    print('LA RESPUESTA: ', respuesta)
     return respuesta
 
 if __name__ == "__main__":

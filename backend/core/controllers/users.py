@@ -1,7 +1,6 @@
 from flask import jsonify
 from core import get_user_permissions
 from core.app import db
-from core.models import User
 from core.services import users
 from apiflask import APIBlueprint, abort
 from werkzeug.exceptions import HTTPException
@@ -86,7 +85,6 @@ def get_profile():
         user_detail = users.get_user_by_id(user_id)
         user_profile = ProfileOut().dump(user_detail)
         user_profile['abilities'] = [{'subject': ability[0], 'action': ability[1]} for ability in get_user_permissions(user_id)]
-        print('PROFILE: ', user_profile)
         return user_profile
     except Exception as ex:
         abort(500, str(ex))

@@ -4,14 +4,9 @@
     </v-container>
 </template>
 
-<script>
+<script setup>
 definePageMeta({
-    layout: 'app'
+    layout: 'app',
+    middleware: ['private']
 })
-
-export default {
-    data: () => ({
-
-    })
-}
 </script>

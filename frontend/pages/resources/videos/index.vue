@@ -15,7 +15,7 @@
     <v-row class="my-6">
         <v-card v-for="video in videos" :key="video.documentId"
           width="300" height="300" :to="`/resources/videos/${video.documentId}`" class="me-6">
-          <v-img max-height="100" cover :src="`http://localhost:1337${video.poster.url}`" />
+          <v-img max-height="100" cover :src="`${strapiUrl}${video.poster.url}`" />
           <v-card-title>{{ video.title }}</v-card-title>
           <v-card-text>{{ video.description }}</v-card-text>
         </v-card>
@@ -30,6 +30,9 @@
 <script setup>
 import { onBeforeMount } from 'vue'
 
+const config = useRuntimeConfig();
+
+const strapiUrl = config.public.strapiUrl;
 const videos = ref([]);
 
 onBeforeMount(async () => {

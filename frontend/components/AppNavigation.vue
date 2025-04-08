@@ -2,13 +2,14 @@
     <v-navigation-drawer v-model="drawer" class="bg-secondary" location="left">
         <v-list-item>
             <v-list-item-title>
-                <NuxtLink to="/" class="text-white text-decoration-none">🦖 DinoScanAI</NuxtLink>
+                <NuxtLink to="/app" class="text-white text-decoration-none">🦖 DinoScanAI</NuxtLink>
             </v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
 
         <template v-for="route in routes">
-            <v-list-item link :to="route.path" :title="route.title"></v-list-item>
+            <v-list-item v-if="!['forums', 'strapi'].includes(route.subject)" link :to="route.path" :title="route.title" :append-icon="route.icon"></v-list-item>
+            <v-list-item v-if="['forums', 'strapi'].includes(route.subject)" link :href="route.path" :title="route.title" :append-icon="route.icon"></v-list-item>
         </template>
 
         <template v-slot:append>
@@ -49,24 +50,40 @@ const menu = ref([
     {
         title: 'Users',
         subject: 'users',
-        path: '/app/users'
+        path: '/app/users',
+        icon: 'mdi-account'
 
     },
     {
         title: 'Groups',
         subject: 'groups',
-        path: '/app/groups'
+        path: '/app/groups',
+        icon: 'mdi-account-group'
 
     },
     {
         title: 'Searches',
         subject: 'searches',
-        path: '/app/searches'
+        path: '/app/searches',
+        icon: 'mdi-magnify'
+    },
+    {
+        title: 'Dinosaurs',
+        subject: 'dinosaurs',
+        path: '/app/dinosaurs',
+        icon: 'mdi-google-downasaur'
     },
     {
         title: 'Forums',
         subject: 'forums',
-        path: '/app/forums'
+        path: 'http://192.168.0.104:4200',
+        icon: 'mdi-open-in-new'
+    },
+    {
+        title: 'Strapi',
+        subject: 'strapi',
+        path: 'http://localhost:1337',
+        icon: 'mdi-open-in-new'
     }
 ])
 
@@ -78,6 +95,4 @@ onMounted(() => {
         console.error(err);
     }
 })
-
-const toggleSearchDialog = () => searchDialog.value = !searchDialog.value;
 </script>

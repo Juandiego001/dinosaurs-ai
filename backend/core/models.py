@@ -1,6 +1,6 @@
 from core.app import db
 from bcrypt import checkpw
-from sqlalchemy import BigInteger, Integer, String, DateTime, ForeignKey
+from sqlalchemy import BigInteger, Float, Integer, String, DateTime, ForeignKey
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -89,6 +89,48 @@ class Permission(db.Model):
     create: Mapped[bool]
     update: Mapped[bool]
     delete: Mapped[bool]
+    status: Mapped[str] = mapped_column(String(20), 
+                                        nullable=False,
+                                        default='ACTIVE')
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(), 
+        nullable=False,
+        default=lambda: datetime.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(), 
+        nullable=False,
+        default=lambda: datetime.now(),
+        onupdate=lambda: datetime.now())
+
+class Dinosaur(db.Model):
+    __bind_key__ = 'mssql'
+    __tablename__ = 'dinosaurs'
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    nombre_cientifico: Mapped[str] = mapped_column(String(255))
+    nombre_comun: Mapped[str] = mapped_column(String(255))
+    periodo: Mapped[str] = mapped_column(String(100))
+    habitat: Mapped[str] = mapped_column(String)
+    dieta: Mapped[str] = mapped_column(String)
+    longitud_metros: Mapped[float] = mapped_column(Float)
+    longitud_pies: Mapped[float] = mapped_column(Float)
+    peso_kg: Mapped[float] = mapped_column(Float)
+    peso_lb: Mapped[float] = mapped_column(Float)
+    descripcion: Mapped[str] = mapped_column(String)
+    clasificacion_orden: Mapped[str] = mapped_column(String(100))
+    clasificacion_familia: Mapped[str] = mapped_column(String(100))
+    clasificacion_genero: Mapped[str] = mapped_column(String(100))
+    clasificacion_especie: Mapped[str] = mapped_column(String(100))
+    curiosidades: Mapped[str] = mapped_column(String)
+
+class Search(db.Model):
+    __tablename__ = 'searches'
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    dinosaur: Mapped[str] = mapped_column(String(255), nullable=True)
+    img_path: Mapped[str] = mapped_column(String(255), nullable=True)
+    prediction: Mapped[str] = mapped_column(String, nullable=True)
     status: Mapped[str] = mapped_column(String(20), 
                                         nullable=False,
                                         default='ACTIVE')

@@ -15,7 +15,7 @@
     <v-row class="my-6">
       <v-card v-for="article in articles" :key="article.documentId"
       width="300" height="300" :to="`/resources/articles/${article.documentId}`" class="me-6">
-        <v-img max-height="100" cover :src="`http://localhost:1337${article.cover.url}`" />
+        <v-img max-height="100" cover :src="`${strapiUrl}${article.cover.url}`" />
         <v-card-title>{{ article.title }}</v-card-title>
         <v-card-text>{{ article.description }}</v-card-text>
       </v-card>
@@ -30,6 +30,8 @@
 <script setup>
 import { onBeforeMount } from 'vue'
 
+const config = useRuntimeConfig();
+const strapiUrl = config.public.strapiUrl;
 const articles = ref([]);
 
 onBeforeMount(async () => {

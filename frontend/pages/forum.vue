@@ -1,7 +1,7 @@
 <template>
 <v-container min-height="100vh" class="justify-center">
 
-    <NuxtLink href="http://192.168.0.104:4200/latest" target="_blank" class="text-center py-6 text-secondary d-flex align-center justify-center text-decoration-none">
+    <NuxtLink :href="`${discourseUrl}/latest`" target="_blank" class="text-center py-6 text-secondary d-flex align-center justify-center text-decoration-none">
         <span class="text-h4 me-2">Forum</span>
         <v-icon class="text-h5">mdi-forum</v-icon>
     </NuxtLink>
@@ -12,7 +12,7 @@
 
     <v-row no-gutters>
         <v-card width="300" v-for="post in posts" :key="`post_${post.id}`" class="mt-6 me-6"
-        :href="`http://192.168.0.104:4200${post.post_url}`">
+        :href="`${discourseUrl}${post.post_url}`">
             <v-card-title>
                 <v-row class="py-4 px-2">
                     <p class="text-caption pa-1 rounded-lg text-white" :style="{ background: post.category_color }">{{ post.category_slug }}</p>
@@ -38,8 +38,10 @@
 <script setup>
 import { onBeforeMount } from 'vue';
 
+const config = useRuntimeConfig();
 const { $dateFormat } = useNuxtApp();
 
+const discourseUrl = config.public.discourseUrl;
 const posts = ref([]);
 
 onBeforeMount(async () => {

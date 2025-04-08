@@ -14,16 +14,18 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      api: process.env.NUXT_PUBLIC_API
+      appUrl: process.env.NUXT_APP_URL,
+      strapiUrl: process.env.NUXT_STRAPI_URL,
+      discourseUrl: process.env.NUXT_DISCOURSE_URL
     }
   },
   build: {
     transpile: ['vuetify']
   },
   routeRules: {
-    '/api/**': { proxy: 'http://127.0.0.1:5000/api/**' },
-    '/strapi/**': { proxy: 'http://127.0.0.1:1337/api/**' },
-    '/discourse/**': { proxy: 'http://192.168.0.104:4200/**' }
+    '/api/**': { proxy: `${process.env.NUXT_APP_URL}/api/**` },
+    '/strapi/**': { proxy: `${process.env.NUXT_STRAPI_URL}/api/**` },
+    '/discourse/**': { proxy: `${process.env.NUXT_DISCOURSE_URL}/**` }
   },
   modules: [
     (_options, nuxt) => {

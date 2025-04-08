@@ -1,13 +1,13 @@
 <template>
     <v-container fluid class="fill-height align-start">
         <v-card width="100%" flat>
-            <v-card-title>Users</v-card-title>
+            <v-card-title>Dinosaurs</v-card-title>
             <v-card-text>
-                <v-data-table :items="items" :headers="headers" :items-per-page="perPage"
+                <v-data-table :items="items" :headers="headers" :items-per-page="15"
                     @update:itemsPerPage="v => perPage = v">
 
                     <template v-slot:item.option="{ item }">
-                        <v-btn class="my-2 bg-secondary" icon="mdi-pencil" @click="getUser(item.id)"></v-btn>
+                        <v-btn class="my-2 bg-secondary" icon="mdi-pencil" @click="getDinosaur(item.id)"></v-btn>
                         <span class="mx-2"></span>
                         <v-btn class="my-2 bg-red" icon="mdi-trash-can"
                             @click="form.id = item.id; deleteDialog = true"></v-btn>
@@ -23,13 +23,13 @@
         <v-card>
             <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
-                    Create user
+                    Create dinosaur
                     <v-spacer></v-spacer>
                     <v-btn class="bg-secondary" icon="mdi-close" @click="createDialog = false"></v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text>
-                <v-form @submit.prevent="createUser">
+                <v-form @submit.prevent="createDinosaur">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field v-model="form.fullName" hide-details="auto" label="Full name"></v-text-field>
@@ -42,6 +42,10 @@
                             <v-text-field v-model="form.password" type="password" hide-details="auto"
                                 label="Password"></v-text-field>
                         </v-col>
+                        <v-col cols="12">
+                            <v-text-field v-model="form.document" hide-details="auto" label="Document"></v-text-field>
+                        </v-col>
+
                         <v-col class="text-end">
                             <v-btn variant="outlined" @click="updateDialog = false">Cancel</v-btn>
                             <span class="mx-1"></span>
@@ -59,7 +63,7 @@
         <v-card>
             <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
-                    Update user
+                    Update dinosaur
                     <v-spacer></v-spacer>
                     <v-btn class="bg-secondary" icon="mdi-close" @click="updateDialog = false"></v-btn>
                 </v-row>
@@ -99,13 +103,13 @@
         <v-card>
             <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
-                    Delete user
+                    Delete dinosaur
                     <v-spacer></v-spacer>
                     <v-btn class="bg-secondary" icon="mdi-close" @click="deleteDialog = false"></v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text class="text-center py-6">
-                <p class="text-subtitle-1 mb-6 text-center">¿Are you sure you want to delete the user?</p>
+                <p class="text-subtitle-1 mb-6 text-center">¿Are you sure you want to delete the dinosaur?</p>
 
                 <v-btn @click="deleteDialog = false" variant="outlined">Cancel</v-btn>
                 <span class="mx-2"></span>
@@ -119,13 +123,13 @@
         <v-card>
             <v-card-title class="bg-secondary">
                 <v-row no-gutters align="center">
-                    Search users
+                    Search dinosaurs
                     <v-spacer></v-spacer>
                     <v-btn class="bg-secondary" icon="mdi-close" @click="searchDialog = false"></v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text>
-                <p class="text-subtitle-2 pb-2">Search users by full name, email or document</p>
+                <p class="text-subtitle-2 pb-2">Search dinosaurs by full name, email or document</p>
                 <v-form @submit.prevent="doSearch">
                     <v-row no-gutters="">
                         <v-col cols="12">
@@ -145,7 +149,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onBeforeMount, } from 'vue'
+import { ref, reactive, computed, watch, onBeforeMount, nextTick } from 'vue'
 import { toRefs } from 'vue'
 import { searchMixin } from '~/mixins/searchMixin'
 import { createMixin } from '~/mixins/createMixin'
@@ -156,7 +160,7 @@ definePageMeta({
 })
 
 useHead({
-    title: 'DinoScanAI | Users'
+    title: 'DinoScanAI | Dinosaurs'
 })
 
 const { searchDialog } = toRefs(searchMixin)
@@ -164,7 +168,7 @@ const { createDialog } = toRefs(createMixin)
 const items = ref([]);
 const search = ref('');
 const page = ref(1);
-const perPage = ref(15);
+const perPage = ref(1500);
 const updateDialog = ref(false);
 const deleteDialog = ref(false);
 const form = ref({
@@ -178,25 +182,26 @@ const form = ref({
     updated_at: ''
 })
 
-
 const headers = computed(() => [
     { title: 'Id', key: 'id' },
-    { title: 'Full name', key: 'fullName' },
-    { title: 'Email', key: 'email' },
+    { title: 'Scientific Name', key: 'nombreCientifico' },
+    { title: 'Common Name', key: 'nombreComun' },
+    { title: 'Common Name', key: 'nombreComun' },
+    { title: 'Family clasification', key: 'clasificacionFamilia' },
     { title: 'Options', key: 'option', align: 'center' }
 ])
 
-// watch(perPage, async (val) => {
-//     await getUsers();
-// })
-
-onBeforeMount(async () => {
-    await getUsers();
+watch(() => perPage, async (val) => {
+    await getDinosaurs();
 })
 
-const getUsers = async () => {
+onBeforeMount(async () => {
+    await getDinosaurs();
+})
+
+const getDinosaurs = async () => {
     try {
-        const data = await $fetch('/api/users/', {
+        const data = await $fetch('/api/dinosaurs/', {
             query: {
                 search: search.value,
                 page: page.value,
@@ -204,32 +209,31 @@ const getUsers = async () => {
             },
             method: 'GET'
         })
-        console.log('ITEMS: ', data.items);
         items.value = data.items
     } catch (err) {
         console.log(err)
     }
 }
 
-const getUser = async (id) => {
+const getDinosaur = async (id) => {
     try {
-        const user = await $fetch(`/api/users/${id}`, {
+        const dinosaur = await $fetch(`/api/dinosaurs/${id}`, {
             method: 'GET'
         })
-        form.value = user
+        form.value = dinosaur
         updateDialog.value = true
     } catch (err) {
         console.log(err)
     }
 }
 
-const createUser = async () => {
+const createDinosaur = async () => {
     try {
-        const response = await $fetch('/api/users/signup', {
+        const response = await $fetch('/api/dinosaurs/signup', {
             method: 'POST',
             body: this.form
         })
-        await getUsers()
+        await getDinosaurs()
         createDialog.value = false
     } catch (err) {
         console.log(err)
@@ -238,11 +242,11 @@ const createUser = async () => {
 
 const updateUser = async () => {
     try {
-        const response = await $fetch(`/api/users/${this.form.id}`, {
+        const response = await $fetch(`/api/dinosaurs/${this.form.id}`, {
             method: 'PUT',
-            body: this.form
+            body: form.value
         })
-        await getUsers()
+        await getDinosaurs()
         updateDialog.value = false
     } catch (err) {
         console.log(err)
@@ -250,10 +254,10 @@ const updateUser = async () => {
 }
 
 const deleteUser = async () => {
-    const response = await $fetch(`/api/users/${this.form.id}`, {
+    const response = await $fetch(`/api/dinosaurs/${this.form.id}`, {
         method: 'DELETE'
     })
-    await getUsers()
+    await getDinosaurs()
     deleteDialog.value = false
 }
 
@@ -261,11 +265,10 @@ const doSearch = async () => {
     try {
         page.value = 1
         perPage.value = 15
-        await this.getUsers()
+        await getDinosaurs()
         searchDialog.value = false
     } catch (err) {
         console.log(err)
     }
 }
-
 </script>

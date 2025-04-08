@@ -28,9 +28,11 @@
 <script setup>
 import { onBeforeMount } from 'vue';
 
+const config = useRuntimeConfig();
 const { $dateFormat } = useNuxtApp();
 const route = useRoute()
 
+const strapiUrl = config.public.strapiUrl;
 const video = ref({
   slug: '',
   title: '',

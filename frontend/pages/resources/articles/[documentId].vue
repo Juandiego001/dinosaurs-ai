@@ -20,13 +20,13 @@
       </v-col>
     </v-row>
 
-    <v-img max-height="400" cover :src="`http://localhost:1337${article.cover.url}`"></v-img>
+    <v-img max-height="400" cover :src="`${strapiUrl}${article.cover.url}`"></v-img>
     <p class="text-subtitle-1 mt-2">{{ article.description }}</p>
 
     <v-container>
       <template v-for="block in article.blocks" :key="`${article.documentId}_${block.id}`">
         <template v-if="block.__component === 'shared.media'">
-          <v-img contain class="mx-auto my-4" max-height="250" :src="`http://localhost:1337${block.file.url}`"></v-img>
+          <v-img contain class="mx-auto my-4" max-height="250" :src="`${strapiUrl}${block.file.url}`"></v-img>
         </template>
         <template v-if="block.__component === 'shared.quote'">
           <v-sheet class="border-s-md pa-4 my-4 font-italic">
@@ -36,7 +36,7 @@
         </template>
         <template v-if="block.__component === 'shared.slider'">
             <v-carousel class="my-4">
-              <v-carousel-item v-for="file in block.files" :src="`http://localhost:1337${file.url}`" cover></v-carousel-item>
+              <v-carousel-item v-for="file in block.files" :src="`${strapiUrl}${file.url}`" cover></v-carousel-item>
             </v-carousel>
         </template>
         <template v-if="block.__component === 'rich-json.rich-json'">
@@ -53,9 +53,11 @@
 <script setup>
 import { onBeforeMount } from 'vue';
 
+const config = useRuntimeConfig();
 const { $dateFormat } = useNuxtApp();
 const route = useRoute()
 
+const strapiUrl = config.public.strapiUrl;
 const article = ref({
   cover: {
     url: ''

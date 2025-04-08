@@ -60,7 +60,8 @@
         SEARCHES {
             int id PK, UK "AUTO_INCREMENT, NN"
             int user_id FK "NN"
-            string img_path "NN"
+            string dinosaur "N"
+            string img_path "N"
             string prediction "NN"
             string status "NN"
             date created_at "NN"

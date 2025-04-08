@@ -2,20 +2,18 @@
 <v-container fluid class="fill-height justify-center">
     <v-card max-width="700" class="pa-3 bg-primary" elevation="10">
         <v-card-title class="text-center">
-            <p class="text-h4">Descubre el Mundo Prehistórico</p>
+            <p class="text-h4">Discover the Prehistoric World</p>
         </v-card-title>
 
         <v-card-text>
             <p class="my-4 text-justify">
-                ¿Curioso sobre dinosaurios y quieres conocer datos fascinantes?<br /><br />
+                Curious about dinosaurs and want to discover fascinating facts?<br /><br />
 
-                ¡Es simple! Sube una imagen de cualquier dinosaurio o toma una foto en tiempo real 
-                con nuestra función de cámara.<br /><br />
+                It’s simple! Upload an image of any dinosaur or take a real-time photo using our camera feature.<br /><br />
 
-                En segundos, nuestro sistema de inteligencia artificial identificará la especie 
-                y te proporcionará información detallada<br /><br />
+                In seconds, our artificial intelligence system will identify the species and provide you with detailed information.<br /><br />
 
-                Ideal para estudiantes, aficionados y cualquier entusiasta de la paleontología.
+                Perfect for students, hobbyists, and any paleontology enthusiast.
             </p>
 
             <!-- Falta la parte del upload image -->
