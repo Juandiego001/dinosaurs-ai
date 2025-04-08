@@ -12,7 +12,7 @@ Este repositorio contiene el código y recursos utilizados para el desarrollo de
   - Generación de texto con modelos LLM (Ollama)
 - Gestión de Contenidos: Strapi (CMS Headless)
 - Comunidad y Feedback: Discourse (foro integrado)
-- Base de datos: PostgreSQL, 
+- Base de datos: PostgreSQL. 
 
 ### 🎯 Características Principales
 - 📷 Clasificación Automática de dinosaurios a partir de fotografías.
@@ -23,10 +23,10 @@ Este repositorio contiene el código y recursos utilizados para el desarrollo de
 - 🧪 Entrenamiento Personalizado con datasets propios o subidos por la comunidad.
 
 ### 🚀 Instalación y Ejecución Local
-~~~
+```
 # Clonar el repositorio
 git clone https://github.com/Juandiego001/dinosaurs-ai.git
-cd dinoscan-ai
+cd dinosaurs-ai
 
 # Instalar dependencias del backend (FastAPI)
 cd backend
@@ -34,8 +34,15 @@ pip install -r requirements.txt
 
 # Instalar dependencias del frontend (Nuxt)
 cd ../frontend
-yarn add
+yarn install
 
 # Ejecutar la app en desarrollo
 yarn run dev
-~~~
+```
+
+### 🤝 Contribuciones
+¡Las contribuciones son bienvenidas! Puedes colaborar de las siguientes formas:
+- Hacerle un fork al repositorio para implementar mejoras y queden en tu repositorio.
+- Haciendo pull requests con correcciones o nuevas features.
+- Compartiendo datasets de dinosaurios.
+- Ayudando con la documentación o traducciones.
